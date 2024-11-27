@@ -26,13 +26,13 @@ const LandingPage = () => {
               TaskMaster
             </h1>
             <div className="flex space-x-6">
-              <button 
+              <button
                 className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
                 onClick={() => handleAuthClick('login')}
               >
                 Connexion
               </button>
-              <button 
+              <button
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
                 onClick={() => handleAuthClick('register')}
               >
@@ -52,7 +52,7 @@ const LandingPage = () => {
             Une application intuitive pour organiser et suivre vos tâches quotidiennes
           </p>
           <div className="mt-8 flex justify-center">
-            <button 
+            <button
               onClick={() => handleAuthClick('register')}
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:bg-indigo-700"
             >
@@ -62,22 +62,33 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <div className="mt-20 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="p-8 bg-white shadow-xl rounded-lg backdrop-blur-lg">
-              <div className="mb-6 flex justify-center items-center">
-                <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full shadow-xl">
+            <div
+              key={index}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl transform translate-x-10 -translate-y-10 group-hover:scale-125 transition-transform duration-500"></div>
+
+              <div className="relative">
+                <div className="inline-flex p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300">
                   <CheckCircle className="h-6 w-6 text-white" />
                 </div>
+
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  {feature.title}
+                </h3>
+
+                <p className="mt-4 text-gray-600 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-              <p className="mt-3 text-base text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>
       </main>
 
-      <AuthModal 
+      <AuthModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         type={modalContent}
