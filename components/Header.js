@@ -47,9 +47,9 @@ const Header = ({ isDarkMode, setIsDarkMode, setIsNotificationModalOpen, setIsPr
                                     type="text"
                                     placeholder="Rechercher..."
                                     onChange={handleSearch}
-                                    className="pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:ring-2 focus:ring-indigo-500 outline-none w-64"
+                                    className="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:text-gray-900  focus:ring-2 focus:ring-indigo-500 outline-none w-64"
                                 />
-                                <Search className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                <Search className="h-5 w-5 text-gray-400 dark:text-gray-900 absolute left-3 top-2.5" />
                             </div>
                         </div>
                     </div>

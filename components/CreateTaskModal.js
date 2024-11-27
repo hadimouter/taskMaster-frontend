@@ -340,7 +340,7 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Notifications par email</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray">Notifications par email</h3>
                   <p className="text-sm text-gray-500">Recevoir des mises à jour par email</p>
                 </div>
                 <div className="relative">
@@ -356,7 +356,7 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
 
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Rappels de tâches</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray">Rappels de tâches</h3>
                   <p className="text-sm text-gray-500">Notifications pour les tâches à venir</p>
                 </div>
                 <div className="relative">
@@ -372,7 +372,7 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
 
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Alertes de date limite</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray">Alertes de date limite</h3>
                   <p className="text-sm text-gray-500">Notifications pour les échéances proches</p>
                 </div>
                 <div className="relative">

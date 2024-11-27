@@ -19,11 +19,11 @@ const FilterPanel = ({ filters: initialFilters, onFilterChange }) => {
         <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-lg p-4 border border-gray-100 w-64 z-50">
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray-100">Statut</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray">Statut</label>
                     <select
                         value={filters.status}
                         onChange={(e) => handleChange('status', e.target.value)}
-                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray-100"
+                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray"
                     >
                         <option value="all">Tous</option>
                         <option value="pending">En cours</option>
@@ -32,11 +32,11 @@ const FilterPanel = ({ filters: initialFilters, onFilterChange }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray-100">Priorité</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray">Priorité</label>
                     <select
                         value={filters.priority}
                         onChange={(e) => handleChange('priority', e.target.value)}
-                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray-100"
+                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray"
                     >
                         <option value="all">Toutes</option>
                         <option value="high">Haute</option>
@@ -46,11 +46,11 @@ const FilterPanel = ({ filters: initialFilters, onFilterChange }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray-100">Période</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray">Période</label>
                     <select
                         value={filters.dateRange}
                         onChange={(e) => handleChange('dateRange', e.target.value)}
-                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray-100"
+                        className="w-full rounded-lg border border-gray-200 p-2 text-gray-900 dark:text-gray"
                     >
                         <option value="all">Toutes les dates</option>
                         <option value="today">Aujourd'hui</option>
@@ -134,17 +134,17 @@ const CalendarView = ({ selectedDate, onDateSelect, onClose, tasks }) => {
 
 const CalendarHeader = ({ selectedDate, onPrevMonth, onNextMonth, onClose }) => (
     <div className="flex justify-between items-center mb-4">
-        <button onClick={onPrevMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray-100">
+        <button onClick={onPrevMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray">
             <ArrowLeft className="h-5 w-5" />
         </button>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray">
             {selectedDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
         </h3>
         <div className="flex items-center space-x-2">
-            <button onClick={onNextMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray-100">
+            <button onClick={onNextMonth} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray">
                 <ArrowRight className="h-5 w-5" />
             </button>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray-100">
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-900 dark:text-gray">
                 <X className="h-5 w-5" />
             </button>
         </div>
@@ -155,10 +155,10 @@ const CalendarGrid = ({ days, selectedDate, isToday, getDayTasks, onDateSelect }
     <>
         <div className="grid grid-cols-7 gap-2 text-center mb-2 ">
             {['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].map(day => (
-                <div key={day} className="text-sm font-medium text-gray-600 text-gray-900 dark:text-gray-100">{day}</div>
+                <div key={day} className="text-sm font-medium text-gray-600 text-gray-900 dark:text-gray">{day}</div>
             ))}
         </div>
-        <div className="grid grid-cols-7 gap-2 text-gray-900 dark:text-gray-100">
+        <div className="grid grid-cols-7 gap-2 text-gray-900 dark:text-gray">
             {days.map((day, index) => {
                 if (!day) return <div key={`empty-${index}`} />;
 
