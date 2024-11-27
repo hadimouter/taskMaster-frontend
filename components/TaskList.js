@@ -143,11 +143,30 @@ const TaskList = ({
                                             `}>
                                                 {formatDate(task.dueDate)}
                                             </span>
-                                            {task.category && (
-                                                <span className={`text-xs px-2 py-1 rounded-full ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
-                                                    }`}>
-                                                    {task.category}
-                                                </span>
+                                            {task.category && task.category.length > 0 && (
+                                                <div className="flex flex-wrap gap-1 mt-2">
+                                                    {Array.isArray(task.category) ? (
+                                                        task.category.map((cat, index) => (
+                                                            <span
+                                                                key={index}
+                                                                className={`text-xs px-2 py-1 rounded-full 
+            ${isDarkMode
+                                                                        ? 'bg-indigo-900/20 text-indigo-300'
+                                                                        : 'bg-indigo-50 text-indigo-600'}`}
+                                                            >
+                                                                {cat}
+                                                            </span>
+                                                        ))
+                                                    ) : (
+                                                        <span className={`text-xs px-2 py-1 rounded-full 
+        ${isDarkMode
+                                                                ? 'bg-indigo-900/20 text-indigo-300'
+                                                                : 'bg-indigo-50 text-indigo-600'}`}
+                                                        >
+                                                            {task.category}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     </div>

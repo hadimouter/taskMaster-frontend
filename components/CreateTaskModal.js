@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {LogOut, X, Bell } from 'lucide-react';
+import { LogOut, X, Bell } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateNotifications } from '../reducers/user';
 import { logout } from '../reducers/user';
@@ -11,10 +11,32 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
     description: '',
     dueDate: '',
     priority: 'medium',
-    category: ''
+    category: []
   });
 
+  const [categoryInput, setCategoryInput] = useState('');
+
   if (!isOpen) return null;
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    if (value.slice(-1) === ',') {
+      const newCategory = value.slice(0, -1).trim();
+      if (newCategory && !taskData.category.includes(newCategory)) {
+        setTaskData({ ...taskData, category: [...taskData.category, newCategory] });
+      }
+      setCategoryInput('');
+    } else {
+      setCategoryInput(value);
+    }
+  };
+
+  const removeCategory = (categoryToRemove) => {
+    setTaskData({
+      ...taskData,
+      category: taskData.category.filter(cat => cat !== categoryToRemove)
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +68,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
                 required
                 value={taskData.title}
                 onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
                 placeholder="Nom de la tâche"
               />
             </div>
@@ -56,7 +78,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
               <textarea
                 value={taskData.description}
                 onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
                 rows="3"
                 placeholder="Description de la tâche"
               />
@@ -69,7 +91,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
                   type="date"
                   value={taskData.dueDate}
                   onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
                 />
               </div>
 
@@ -78,7 +100,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
                 <select
                   value={taskData.priority}
                   onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
                 >
                   <option value="low">Basse</option>
                   <option value="medium">Moyenne</option>
@@ -89,13 +111,30 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
-              <input
-                type="text"
-                value={taskData.category}
-                onChange={(e) => setTaskData({ ...taskData, category: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                placeholder="Ex: Travail, Personnel, etc."
-              />
+              <div className="min-h-[45px] flex flex-wrap gap-2 p-2 rounded-lg border border-gray-200 focus-within:ring-2 focus-within:ring-indigo-500 bg-white dark:text-gray-900">
+                {taskData.category.map((cat, index) => (
+                  <span
+                    key={index}
+                    className="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm"
+                  >
+                    {cat}
+                    <button
+                      onClick={() => removeCategory(cat)}
+                      className="hover:bg-indigo-200 rounded-full w-4 h-4 flex items-center justify-center transition-colors"
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  value={categoryInput}
+                  onChange={handleCategoryChange}
+                  className="flex-grow min-w-[120px] outline-none"
+                  placeholder="Tapez et utilisez une virgule pour ajouter"
+                />
+              </div>
             </div>
 
             <button
@@ -148,7 +187,7 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
-      
+
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
@@ -286,8 +325,8 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
           'Content-Type': 'application/json',
           'Authorization': user.token
         },
-        body: JSON.stringify({ 
-          notifications: settings 
+        body: JSON.stringify({
+          notifications: settings
         })
       });
 
