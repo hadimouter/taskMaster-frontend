@@ -3,7 +3,7 @@ import { MoreVertical, Edit, Trash2, CheckCircle, X } from 'lucide-react';
 
 export const TaskMenu = ({ task, onEdit, onDelete, onStatusChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isDarkMode, setIsDarkMode] = useState(false);
   return (
     <div className="relative">
       <button
@@ -58,17 +58,18 @@ export const TaskMenu = ({ task, onEdit, onDelete, onStatusChange }) => {
 };
 
 export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
-   // Initialiser taskData avec des valeurs par défaut plus complètes
-   const defaultData = {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Initialiser taskData avec des valeurs par défaut plus complètes
+  const defaultData = {
     title: '',
     description: '',
     dueDate: new Date().toISOString().split('T')[0],
     priority: 'medium',
     status: 'pending'
   };
-  
-  const [taskData, setTaskData] = useState({...defaultData, ...task});
-  
+
+  const [taskData, setTaskData] = useState({ ...defaultData, ...task });
+
   // Mettre à jour taskData quand task change
   useEffect(() => {
     if (task) {
@@ -86,7 +87,7 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl max-w-md w-full mx-4">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl max-w-md w-full mx-4">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -94,51 +95,59 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Titre
+              </label>
               <input
                 type="text"
                 required
                 value={taskData.title}
                 onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Description
+              </label>
               <textarea
                 value={taskData.description}
                 onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
                 rows="3"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date limite</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Date limite
+                </label>
                 <input
                   type="date"
                   value={taskData.dueDate}
                   onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Priorité</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Priorité
+                </label>
                 <select
                   value={taskData.priority}
                   onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
                 >
                   <option value="low">Basse</option>
                   <option value="medium">Moyenne</option>

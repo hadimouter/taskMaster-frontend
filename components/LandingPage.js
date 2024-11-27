@@ -19,21 +19,28 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-indigo-200">
-      <nav className="bg-transparent backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      <nav className="bg-transparent backdrop-blur-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-extrabold text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
-              TaskMaster
+            <h1 className="text-2xl sm:text-3xl font-extrabold">
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 transition-all duration-500">
+                TaskMaster
+              </span>
             </h1>
-            <div className="flex space-x-6">
+
+            <div className="flex items-center gap-3 sm:gap-6">
               <button
-                className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
+                className="relative text-gray-700 px-2 sm:px-3 py-2 text-sm sm:text-base rounded-md overflow-hidden group"
                 onClick={() => handleAuthClick('login')}
               >
-                Connexion
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-indigo-600">
+                  Connexion
+                </span>
+                <div className="absolute inset-0 bg-gray-100 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
               </button>
+
               <button
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 sm:px-4 py-2 text-sm sm:text-base rounded-md transition-all duration-300 hover:shadow-[0_0_15px_rgba(99,102,241,0.5)] hover:-translate-y-0.5"
                 onClick={() => handleAuthClick('register')}
               >
                 S'inscrire
@@ -42,7 +49,7 @@ const LandingPage = () => {
           </div>
         </div>
       </nav>
-
+      
       <main className="max-w-7xl mx-auto py-16 px-6 sm:py-24 sm:px-8 lg:px-12">
         <div className="text-center">
           <h1 className="text-5xl font-extrabold text-gray-900 sm:text-6xl">
