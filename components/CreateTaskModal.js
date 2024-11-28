@@ -5,18 +5,27 @@ import { updateNotifications } from '../reducers/user';
 import { logout } from '../reducers/user';
 import { useRouter } from 'next/router'; // Router Next.js
 
-export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
-  const [taskData, setTaskData] = useState({
+
+
+export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
+  const initialTaskData = {
     title: '',
     description: '',
     dueDate: '',
     priority: 'medium',
     category: []
-  });
+  };
 
+  const [taskData, setTaskData] = useState(initialTaskData);
   const [categoryInput, setCategoryInput] = useState('');
 
   if (!isOpen) return null;
+
+  const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
+  const inputBgClass = isDarkMode ? 'bg-gray-700' : 'bg-white';
+  const inputTextClass = isDarkMode ? 'text-white' : 'text-gray-900';
+  const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
+  const borderClass = isDarkMode ? 'border-gray-600' : 'border-gray-200';
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
@@ -41,44 +50,50 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(taskData);
+    setTaskData(initialTaskData);
+    setCategoryInput('');
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl max-w-md w-full mx-4 transform transition-all">
+      <div className={`${modalBgClass} rounded-2xl shadow-xl max-w-md w-full mx-4`}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Nouvelle Tâche
             </h2>
             <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              onClick={() => {
+                setTaskData(initialTaskData);
+                setCategoryInput('');
+                onClose();
+              }}
+              className={`p-2 hover:${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-full transition-colors`}
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className={isDarkMode ? 'text-gray-300' : 'text-gray-500'} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Titre</label>
               <input
                 type="text"
                 required
                 value={taskData.title}
                 onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
+                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 placeholder="Nom de la tâche"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Description</label>
               <textarea
                 value={taskData.description}
                 onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
+                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 rows="3"
                 placeholder="Description de la tâche"
               />
@@ -86,21 +101,22 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date limite</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Date limite</label>
                 <input
                   type="date"
+                  required
                   value={taskData.dueDate}
                   onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Priorité</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Priorité</label>
                 <select
                   value={taskData.priority}
                   onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:text-gray-900"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 >
                   <option value="low">Basse</option>
                   <option value="medium">Moyenne</option>
@@ -110,12 +126,12 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
-              <div className="min-h-[45px] flex flex-wrap gap-2 p-2 rounded-lg border border-gray-200 focus-within:ring-2 focus-within:ring-indigo-500 bg-white dark:text-gray-900">
+              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Catégorie</label>
+              <div className={`min-h-[45px] flex flex-wrap gap-2 p-2 rounded-lg border ${borderClass} focus-within:ring-2 focus-within:ring-indigo-500 ${inputBgClass} ${inputTextClass}`}>
                 {taskData.category.map((cat, index) => (
                   <span
                     key={index}
-                    className="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm"
+                    className={`bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm ${isDarkMode ? 'bg-opacity-80' : ''}`}
                   >
                     {cat}
                     <button
@@ -131,7 +147,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
                   type="text"
                   value={categoryInput}
                   onChange={handleCategoryChange}
-                  className="flex-grow min-w-[120px] outline-none"
+                  className={`flex-grow min-w-[120px] outline-none ${inputBgClass} ${inputTextClass}`}
                   placeholder="Tapez et utilisez une virgule pour ajouter"
                 />
               </div>
@@ -154,10 +170,17 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }) => {
 
 
 
-export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
+export const ProfileModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  
+  const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
+  const inputBgClass = isDarkMode ? 'bg-gray-700' : 'bg-white';
+  const inputTextClass = isDarkMode ? 'text-white' : 'text-gray-900';
+  const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
+  const borderClass = isDarkMode ? 'border-gray-600' : 'border-gray-200';
+
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
@@ -178,7 +201,7 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    router.push('/'); // Utilisation du router Next.js
+    router.push('/');
     onClose();
   };
 
@@ -188,7 +211,7 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
     <div className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto">
+      <div className={`relative ${modalBgClass} rounded-2xl shadow-xl w-full max-w-md mx-auto`}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -196,9 +219,9 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className={`p-2 hover:${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-full transition-colors`}
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className={isDarkMode ? 'text-gray-300' : 'text-gray-500'} />
             </button>
           </div>
 
@@ -214,49 +237,48 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
               </div>
             </div>
 
-            {/* Champs du formulaire - inchangés */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Nom</label>
                 <input
                   required
                   type="text"
                   placeholder={user.name}
                   value={profileData.name}
                   onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Email</label>
                 <input
                   required
                   type="email"
                   placeholder={user.email}
                   value={profileData.email}
                   onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Mot de passe actuel</label>
                 <input
                   type="password"
                   value={profileData.currentPassword}
                   onChange={(e) => setProfileData({ ...profileData, currentPassword: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Nouveau mot de passe</label>
                 <input
                   type="password"
                   value={profileData.newPassword}
                   onChange={(e) => setProfileData({ ...profileData, newPassword: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
             </div>
@@ -268,17 +290,15 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
               Mettre à jour le profil
             </button>
 
-            {/* Séparateur */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
+                <div className={`w-full border-t ${borderClass}`}></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">ou</span>
+                <span className={`px-2 ${modalBgClass} ${labelClass}`}>ou</span>
               </div>
             </div>
 
-            {/* Bouton de déconnexion */}
             <button
               type="button"
               onClick={handleLogout}
@@ -296,11 +316,19 @@ export const ProfileModal = ({ isOpen, onClose, onSubmit }) => {
 
 
 
-export const NotificationSettings = ({ isOpen, onClose }) => {
+export const NotificationSettings = ({ isOpen, onClose, isDarkMode }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
+  const textClass = isDarkMode ? 'text-white' : 'text-gray-900';
+  const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
+  const hoverBgClass = isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
+  const borderClass = isDarkMode ? 'border-gray-600' : 'border-gray-200';
+  const secondaryTextClass = isDarkMode ? 'text-gray-300' : 'text-gray-500';
+
   const [settings, setSettings] = useState({
     emailNotifications: true,
     taskReminders: true,
@@ -336,12 +364,10 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
         throw new Error(data.error || 'Erreur lors de la mise à jour des notifications');
       }
 
-      // Mettre à jour le state global avec les nouvelles notifications
       dispatch(updateNotifications(settings));
       onClose();
     } catch (err) {
       setError(err.message || 'Une erreur est survenue');
-      // La modal reste ouverte en cas d'erreur
     } finally {
       setIsSubmitting(false);
     }
@@ -351,7 +377,7 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl max-w-md w-full mx-4">
+      <div className={`${modalBgClass} rounded-2xl shadow-xl max-w-md w-full mx-4`}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -359,9 +385,9 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className={`p-2 ${hoverBgClass} rounded-full transition-colors`}
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className={isDarkMode ? 'text-gray-300' : 'text-gray-500'} />
             </button>
           </div>
 
@@ -370,60 +396,46 @@ export const NotificationSettings = ({ isOpen, onClose }) => {
           )}
 
           <div className="mb-8">
-            <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center">
-              <Bell className="h-8 w-8 text-indigo-600" />
+            <div className={`w-16 h-16 mx-auto ${isDarkMode ? 'bg-indigo-900' : 'bg-indigo-100'} rounded-full flex items-center justify-center`}>
+              <Bell className={isDarkMode ? 'text-indigo-400' : 'text-indigo-600'} size={32} />
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray">Notifications par email</h3>
-                  <p className="text-sm text-gray-500">Recevoir des mises à jour par email</p>
+              {[
+                {
+                  title: 'Notifications par email',
+                  description: 'Recevoir des mises à jour par email',
+                  key: 'emailNotifications'
+                },
+                {
+                  title: 'Rappels de tâches',
+                  description: 'Notifications pour les tâches à venir',
+                  key: 'taskReminders'
+                },
+                {
+                  title: 'Alertes de date limite',
+                  description: 'Notifications pour les échéances proches',
+                  key: 'dueDateAlerts'
+                }
+              ].map((setting) => (
+                <div key={setting.key} className={`flex items-center justify-between p-4 rounded-lg ${hoverBgClass} transition-colors`}>
+                  <div>
+                    <h3 className={`font-medium ${textClass}`}>{setting.title}</h3>
+                    <p className={secondaryTextClass}>{setting.description}</p>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={settings[setting.key]}
+                      onChange={(e) => setSettings({ ...settings, [setting.key]: e.target.checked })}
+                      className="w-10 h-6 bg-gray-200 rounded-full appearance-none cursor-pointer transition-colors checked:bg-indigo-600"
+                    />
+                    <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform ${settings[setting.key] ? 'translate-x-4' : ''}`} />
+                  </div>
                 </div>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={settings.emailNotifications}
-                    onChange={(e) => setSettings({ ...settings, emailNotifications: e.target.checked })}
-                    className="w-10 h-6 bg-gray-200 rounded-full appearance-none cursor-pointer transition-colors checked:bg-indigo-600"
-                  />
-                  <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform ${settings.emailNotifications ? 'translate-x-4' : ''}`} />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray">Rappels de tâches</h3>
-                  <p className="text-sm text-gray-500">Notifications pour les tâches à venir</p>
-                </div>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={settings.taskReminders}
-                    onChange={(e) => setSettings({ ...settings, taskReminders: e.target.checked })}
-                    className="w-10 h-6 bg-gray-200 rounded-full appearance-none cursor-pointer transition-colors checked:bg-indigo-600"
-                  />
-                  <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform ${settings.taskReminders ? 'translate-x-4' : ''}`} />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-gray">Alertes de date limite</h3>
-                  <p className="text-sm text-gray-500">Notifications pour les échéances proches</p>
-                </div>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    checked={settings.dueDateAlerts}
-                    onChange={(e) => setSettings({ ...settings, dueDateAlerts: e.target.checked })}
-                    className="w-10 h-6 bg-gray-200 rounded-full appearance-none cursor-pointer transition-colors checked:bg-indigo-600"
-                  />
-                  <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform ${settings.dueDateAlerts ? 'translate-x-4' : ''}`} />
-                </div>
-              </div>
+              ))}
             </div>
 
             <button

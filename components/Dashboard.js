@@ -247,10 +247,10 @@ const Dashboard = () => {
                         onFilterChange={handleFilterChange}
                     />
                 </div>
-                
+
                 {/* Stats Cards */}
                 <StatsCards tasks={tasks || []} />
-                
+
                 {/* Progress Chart */}
                 <ProgressChart tasks={tasks} />
 
@@ -264,20 +264,24 @@ const Dashboard = () => {
                 />
             </main>
             <CreateTaskModal
+                isDarkMode={isDarkMode}
                 isOpen={isTaskModalOpen}
                 onClose={() => setIsTaskModalOpen(false)}
                 onSubmit={handleTaskSubmit}
             />
             <ProfileModal
+                isDarkMode={isDarkMode}
                 isOpen={isProfileModalOpen}
                 onClose={() => setIsProfileModalOpen(false)}
                 onSubmit={handleProfileUpdate}
             />
             <NotificationSettings
+                isDarkMode={isDarkMode}
                 isOpen={isNotificationModalOpen}
                 onClose={() => setIsNotificationModalOpen(false)}
             />
             <EditTaskModal
+                isDarkMode={isDarkMode}
                 isOpen={!!editingTask}
                 onClose={() => setEditingTask(null)}
                 onSubmit={handleUpdateTask}

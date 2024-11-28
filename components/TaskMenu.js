@@ -57,8 +57,8 @@ export const TaskMenu = ({ task, onEdit, onDelete, onStatusChange }) => {
   );
 };
 
-export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+
+export const EditTaskModal = ({ isOpen, onClose, onSubmit, task, isDarkMode }) => {
   // Initialiser taskData avec des valeurs par défaut plus complètes
   const defaultData = {
     title: '',
@@ -85,9 +85,16 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
     onClose();
   };
 
+  // Classes conditionnelles basées sur isDarkMode
+  const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
+  const inputBgClass = isDarkMode ? 'bg-gray-700' : 'bg-white';
+  const inputTextClass = isDarkMode ? 'text-white' : 'text-gray-900';
+  const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
+  const borderClass = isDarkMode ? 'border-gray-600' : 'border-gray-200';
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-2xl shadow-xl max-w-md w-full mx-4">
+      <div className={`${modalBgClass} rounded-2xl shadow-xl max-w-md w-full mx-4`}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -95,15 +102,15 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              className={`p-2 hover:${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-full transition-colors`}
             >
-              <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              <X className={isDarkMode ? 'text-gray-300' : 'text-gray-500'} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${labelClass} mb-2`}>
                 Titre
               </label>
               <input
@@ -111,43 +118,43 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
                 required
                 value={taskData.title}
                 onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
+                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className={`block text-sm font-medium ${labelClass} mb-2`}>
                 Description
               </label>
               <textarea
                 value={taskData.description}
                 onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
+                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 rows="3"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>
                   Date limite
                 </label>
                 <input
                   type="date"
                   value={taskData.dueDate}
                   onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className={`block text-sm font-medium ${labelClass} mb-2`}>
                   Priorité
                 </label>
                 <select
                   value={taskData.priority}
                   onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-white/90 dark:border-gray-700 dark:text-gray-900"
+                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
                 >
                   <option value="low">Basse</option>
                   <option value="medium">Moyenne</option>
@@ -168,3 +175,5 @@ export const EditTaskModal = ({ isOpen, onClose, onSubmit, task }) => {
     </div>
   );
 };
+
+export default EditTaskModal;
