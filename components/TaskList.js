@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertTriangle, Clock, CheckCircle } from 'lucide-react';
 import { TaskMenu } from './TaskMenu';
-// Composants Card
+
 const Card = ({ children, className = "" }) => (
     <div className={`bg-white rounded-xl shadow-lg border border-gray-100 backdrop-blur-lg ${className}`}>
         {children}
@@ -15,7 +15,7 @@ const CardHeader = ({ children }) => (
 );
 
 const CardTitle = ({ children }) => (
-    <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    <h2 className="text-xl font-bold text-indigo-700">
         {children}
     </h2>
 );
@@ -47,13 +47,13 @@ const TaskList = ({
     const getPriorityColor = (priority) => {
         switch (priority) {
             case 'high':
-                return 'bg-red-100 text-red-600';
+                return 'bg-red-200 text-red-800';
             case 'medium':
-                return 'bg-yellow-100 text-yellow-600';
+                return 'bg-yellow-200 text-yellow-800';
             case 'low':
-                return 'bg-green-100 text-green-600';
+                return 'bg-green-200 text-green-800';
             default:
-                return 'bg-gray-100 text-gray-600';
+                return 'bg-gray-200 text-gray-800';
         }
     };
 
@@ -62,7 +62,7 @@ const TaskList = ({
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>Mes Tâches</CardTitle>
-                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {tasks.length} tâche{tasks.length > 1 ? 's' : ''}
                     </div>
                 </div>
@@ -71,7 +71,7 @@ const TaskList = ({
                 <div className="space-y-4">
                     {tasks.length === 0 ? (
                         <div className="text-center py-8">
-                            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 Aucune tâche pour le moment
                             </p>
                         </div>
@@ -90,40 +90,49 @@ const TaskList = ({
                             >
                                 <div className="flex items-center space-x-4 flex-1">
                                     <div className="relative">
-                                        <input
-                                            type="checkbox"
-                                            checked={task.status === 'completed'}
-                                            onChange={() => handleStatusChange(
-                                                task._id,
-                                                task.status === 'completed' ? 'pending' : 'completed'
-                                            )}
-                                            className={`
-                                                w-6 h-6 rounded-md border-2 
-                                                ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}
-                                                text-indigo-600 
-                                                focus:ring-indigo-500 focus:ring-offset-0
-                                                transition-colors duration-200
-                                                cursor-pointer
-                                            `}
-                                        />
+                                        <label htmlFor={`task-${task._id}`} className="flex items-center">
+                                            <input
+                                                id={`task-${task._id}`}
+                                                type="checkbox"
+                                                checked={task.status === 'completed'}
+                                                onChange={() =>
+                                                    handleStatusChange(
+                                                        task._id,
+                                                        task.status === 'completed' ? 'pending' : 'completed'
+                                                    )
+                                                }
+                                                className={`
+                                                    w-6 h-6 rounded-md border-2 
+                                                    ${isDarkMode ? 'border-gray-400' : 'border-gray-400'}
+                                                    text-indigo-600 
+                                                    focus:ring-indigo-500 focus:ring-offset-0
+                                                    transition-colors duration-200
+                                                    cursor-pointer
+                                                `}
+                                            />
+                                            <span className="sr-only">
+                                                Marquer comme {task.status === 'completed' ? 'non terminée' : 'terminée'}: {task.title}
+                                            </span>
+                                        </label>
                                         {task.status === 'completed' && (
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                
                                             </div>
                                         )}
-
                                     </div>
+
                                     <div className="flex-1 min-w-0">
                                         <h3 className={`
                                             font-medium truncate
                                             ${task.status === 'completed'
-                                                ? 'line-through text-gray-500'
-                                                : isDarkMode ? 'text-white' : 'text-gray-900'
+                                                ? 'line-through text-gray-600'
+                                                : isDarkMode ? 'text-gray-100' : 'text-gray-900'
                                             }
                                         `}>
                                             {task.title}
                                         </h3>
                                         {task.description && (
-                                            <p className={`text-sm mt-1 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <p className={`text-sm mt-1 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                                 {task.description}
                                             </p>
                                         )}
@@ -137,8 +146,8 @@ const TaskList = ({
                                             <span className={`
                                                 text-xs px-2 py-1 rounded-full
                                                 ${isOverdue(task)
-                                                    ? 'bg-red-100 text-red-600'
-                                                    : 'text-gray-500'
+                                                    ? 'bg-red-200 text-red-800'
+                                                    : isDarkMode ? 'text-gray-300' : 'text-gray-700'
                                                 }
                                             `}>
                                                 {formatDate(task.dueDate)}
@@ -150,18 +159,18 @@ const TaskList = ({
                                                             <span
                                                                 key={index}
                                                                 className={`text-xs px-2 py-1 rounded-full 
-            ${isDarkMode
-                                                                        ? 'bg-indigo-900/20 text-indigo-300'
-                                                                        : 'bg-indigo-50 text-indigo-600'}`}
+                                                                    ${isDarkMode
+                                                                        ? 'bg-indigo-800 text-indigo-200'
+                                                                        : 'bg-indigo-200 text-indigo-800'}`}
                                                             >
                                                                 {cat}
                                                             </span>
                                                         ))
                                                     ) : (
                                                         <span className={`text-xs px-2 py-1 rounded-full 
-        ${isDarkMode
-                                                                ? 'bg-indigo-900/20 text-indigo-300'
-                                                                : 'bg-indigo-50 text-indigo-600'}`}
+                                                            ${isDarkMode
+                                                                ? 'bg-indigo-800 text-indigo-200'
+                                                                : 'bg-indigo-200 text-indigo-800'}`}
                                                         >
                                                             {task.category}
                                                         </span>
@@ -173,12 +182,14 @@ const TaskList = ({
                                 </div>
                                 <div className="flex items-center space-x-4 ml-4">
                                     {isOverdue(task) && (
-                                        <span className="text-red-500 flex items-center">
+                                        <button type="button" className="text-red-600" aria-label="Tâche en retard">
                                             <AlertTriangle className="h-5 w-5" />
-                                        </span>
+                                        </button>
                                     )}
                                     {task.status === 'pending' && !isOverdue(task) && (
-                                        <Clock className="h-5 w-5 text-yellow-500" />
+                                        <button type="button" className="text-yellow-700" aria-label="Tâche en attente">
+                                            <Clock className="h-5 w-5" />
+                                        </button>
                                     )}
                                     <TaskMenu
                                         task={task}

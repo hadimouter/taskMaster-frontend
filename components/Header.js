@@ -43,11 +43,13 @@ const Header = ({ isDarkMode, setIsDarkMode, setIsNotificationModalOpen, setIsPr
                         </h1>
                         <div className="hidden md:flex">
                             <div className="relative">
+                                <label for="search-input" class="sr-only">Rechercher</label>
                                 <input
+                                    id="search-input"
                                     type="text"
                                     placeholder="Rechercher..."
                                     onChange={handleSearch}
-                                    className="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:text-gray-900  focus:ring-2 focus:ring-indigo-500 outline-none w-64"
+                                    className="pl-10 pr-4 py-2 rounded-full bg-gray-100 dark:text-gray-900 focus:ring-2 focus:ring-indigo-500 outline-none w-64"
                                 />
                                 <Search className="h-5 w-5 text-gray-400 dark:text-gray-900 absolute left-3 top-2.5" />
                             </div>
@@ -57,24 +59,32 @@ const Header = ({ isDarkMode, setIsDarkMode, setIsNotificationModalOpen, setIsPr
                         <button
                             onClick={() => setIsDarkMode(!isDarkMode)}
                             className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                            aria-label={isDarkMode ? "Activer le mode clair" : "Activer le mode sombre"}
                         >
                             {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                         </button>
-                        <button className="relative" onClick={() => setIsNotificationModalOpen(true)}>
+                        <button
+                            className="relative"
+                            onClick={() => setIsNotificationModalOpen(true)}
+                            aria-label="Afficher les notifications"
+                        >
                             <Bell className="h-5 w-5" />
-                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-600 rounded-full text-xs text-white flex items-center justify-center">
                                 3
                             </span>
                         </button>
+
                         <button
                             onClick={() => setIsProfileModalOpen(true)}
                             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100"
+                            aria-label="Afficher le menu du profil"
                         >
                             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white">
                                 U
                             </div>
                         </button>
                     </div>
+
                 </div>
             </div>
         </header>

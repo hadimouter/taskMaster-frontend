@@ -9,6 +9,7 @@ export const TaskMenu = ({ task, onEdit, onDelete, onStatusChange }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+        aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
       >
         <MoreVertical className="h-5 w-5 text-gray-500" />
       </button>

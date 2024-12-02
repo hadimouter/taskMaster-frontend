@@ -223,6 +223,7 @@ const TaskFilters = ({ tasks = [], onFilterChange = () => { } }) => {
                 <button
                     className={`p-2 rounded-lg transition-colors ${filterView === 'calendar' ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-white/80'}`}
                     onClick={() => setFilterView(prev => prev === 'calendar' ? 'list' : 'calendar')}
+                    aria-label={filterView === 'calendar' ? "Afficher la liste" : "Afficher le calendrier"}
                 >
                     <Calendar className="h-5 w-5" />
                 </button>
@@ -230,6 +231,7 @@ const TaskFilters = ({ tasks = [], onFilterChange = () => { } }) => {
                     <button
                         onClick={() => handleFilterChange({ ...filters, dateRange: 'all' })}
                         className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition-colors"
+                        aria-label="Réinitialiser le filtre de date"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -237,6 +239,7 @@ const TaskFilters = ({ tasks = [], onFilterChange = () => { } }) => {
                 <button
                     className={`p-2 rounded-lg transition-colors ${showFilters ? 'bg-indigo-100 text-indigo-600' : 'hover:bg-white/80'}`}
                     onClick={() => handleShowFilters(!showFilters)}
+                    aria-label={showFilters ? "Masquer les filtres" : "Afficher les filtres"}
                 >
                     <Filter className="h-5 w-5" />
                 </button>
@@ -253,6 +256,7 @@ const TaskFilters = ({ tasks = [], onFilterChange = () => { } }) => {
                 />
             )}
         </div>
+
     );
 };
 

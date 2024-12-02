@@ -55,14 +55,15 @@ const StatsCards = ({ tasks = [] }) => {
                 <CardContent>
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500 mb-1">Tâches en cours</p>
+                            <p className="text-sm text-gray-900 mb-1">Tâches en cours</p>
                             <div className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                 {stats.pending.count}
                             </div>
-                            <p className="text-sm text-gray-400 mt-1">
+                            <p className="text-sm text-gray-700 mt-1">
                                 {stats.pending.percentage}% du total
                             </p>
                         </div>
+
                         <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
                             <Clock className="h-6 w-6 text-indigo-600" />
                         </div>
@@ -73,8 +74,8 @@ const StatsCards = ({ tasks = [] }) => {
                             <span className="text-indigo-600">{stats.pending.percentage}%</span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full">
-                            <div 
-                                className="h-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full transition-all duration-300" 
+                            <div
+                                className="h-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full transition-all duration-300"
                                 style={{ width: `${stats.pending.percentage}%` }}
                             />
                         </div>
@@ -90,7 +91,7 @@ const StatsCards = ({ tasks = [] }) => {
                             <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
                                 {stats.completed.count}
                             </div>
-                            <p className="text-sm text-gray-400 mt-1">
+                            <p className="text-sm text-gray-700 mt-1">
                                 {stats.completed.percentage}% du total
                             </p>
                         </div>
@@ -101,11 +102,11 @@ const StatsCards = ({ tasks = [] }) => {
                     <div className="mt-4">
                         <div className="flex justify-between text-sm mb-1">
                             <span className="text-gray-500">Complété</span>
-                            <span className="text-green-500">{stats.completed.percentage}%</span>
+                            <span className="text-green-700">{stats.completed.percentage}%</span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full">
-                            <div 
-                                className="h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-300" 
+                            <div
+                                className="h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-300"
                                 style={{ width: `${stats.completed.percentage}%` }}
                             />
                         </div>
@@ -121,7 +122,7 @@ const StatsCards = ({ tasks = [] }) => {
                             <div className="text-3xl font-bold bg-gradient-to-r from-red-500 to-rose-500 bg-clip-text text-transparent">
                                 {stats.overdue.count}
                             </div>
-                            <p className="text-sm text-gray-400 mt-1">
+                            <p className="text-sm text-gray-700 mt-1">
                                 {stats.overdue.percentage}% du total
                             </p>
                         </div>
@@ -132,11 +133,11 @@ const StatsCards = ({ tasks = [] }) => {
                     <div className="mt-4">
                         <div className="flex justify-between text-sm mb-1">
                             <span className="text-gray-500">En retard</span>
-                            <span className="text-red-500">{stats.overdue.percentage}%</span>
+                            <span className="text-red-700">{stats.overdue.percentage}%</span>
                         </div>
                         <div className="h-2 bg-gray-100 rounded-full">
-                            <div 
-                                className="h-2 bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-300" 
+                            <div
+                                className="h-2 bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-300"
                                 style={{ width: `${stats.overdue.percentage}%` }}
                             />
                         </div>

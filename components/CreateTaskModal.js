@@ -6,8 +6,15 @@ import { logout } from '../reducers/user';
 import { useRouter } from 'next/router'; // Router Next.js
 
 
-
-export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
+export const CreateTaskModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isDarkMode,
+  existingTasks = [],
+  savedCategories = ['Personnel', 'Travail', 'Urgent', 'Projet', 'Famille'],
+  onSaveCategory = () => {}
+}) => {
   const initialTaskData = {
     title: '',
     description: '',
@@ -18,6 +25,8 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
 
   const [taskData, setTaskData] = useState(initialTaskData);
   const [categoryInput, setCategoryInput] = useState('');
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const [duplicateError, setDuplicateError] = useState('');
 
   if (!isOpen) return null;
 
@@ -26,18 +35,34 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
   const inputTextClass = isDarkMode ? 'text-white' : 'text-gray-900';
   const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
   const borderClass = isDarkMode ? 'border-gray-600' : 'border-gray-200';
+  const hoverClass = isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-50';
+
+  const checkForDuplicate = () => {
+    return existingTasks.some(task => 
+      task.title.toLowerCase().trim() === taskData.title.toLowerCase().trim()
+    );
+  };
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     if (value.slice(-1) === ',') {
       const newCategory = value.slice(0, -1).trim();
-      if (newCategory && !taskData.category.includes(newCategory)) {
-        setTaskData({ ...taskData, category: [...taskData.category, newCategory] });
-      }
-      setCategoryInput('');
+      handleAddCategory(newCategory);
     } else {
       setCategoryInput(value);
+      setCategoryDropdownOpen(true);
     }
+  };
+
+  const handleAddCategory = (newCategory) => {
+    if (newCategory && !taskData.category.includes(newCategory)) {
+      setTaskData({ ...taskData, category: [...taskData.category, newCategory] });
+      if (!savedCategories.includes(newCategory)) {
+        onSaveCategory(newCategory);
+      }
+    }
+    setCategoryInput('');
+    setCategoryDropdownOpen(false);
   };
 
   const removeCategory = (categoryToRemove) => {
@@ -49,18 +74,41 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(taskData);
+    setDuplicateError('');
+
+    if (!taskData.title.trim()) {
+      setDuplicateError('Le titre est requis');
+      return;
+    }
+
+    if (checkForDuplicate()) {
+      setDuplicateError('Une tâche avec ce titre existe déjà!');
+      return;
+    }
+
+    const trimmedData = {
+      ...taskData,
+      title: taskData.title.trim(),
+      description: taskData.description.trim()
+    };
+
+    onSubmit(trimmedData);
     setTaskData(initialTaskData);
     setCategoryInput('');
     onClose();
   };
 
+  const filteredCategories = savedCategories.filter(cat => 
+    cat.toLowerCase().includes(categoryInput.toLowerCase()) &&
+    !taskData.category.includes(cat)
+  );
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className={`${modalBgClass} rounded-2xl shadow-xl max-w-md w-full mx-4`}>
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className={`${modalBgClass} rounded-2xl shadow-xl max-w-md w-full mx-4 transform transition-all duration-300 scale-100 max-h-[90vh] `}>
+        <div className="p-6 space-y-6">
+          <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Nouvelle Tâche
             </h2>
             <button
@@ -69,93 +117,139 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
                 setCategoryInput('');
                 onClose();
               }}
-              className={`p-2 hover:${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-full transition-colors`}
+              className={`p-2 rounded-full transition-colors ${hoverClass}`}
+              aria-label="Fermer"
             >
-              <X className={isDarkMode ? 'text-gray-300' : 'text-gray-500'} />
+              <X className={isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Titre</label>
-              <input
-                type="text"
-                required
-                value={taskData.title}
-                onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-                placeholder="Nom de la tâche"
-              />
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Description</label>
-              <textarea
-                value={taskData.description}
-                onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
-                className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-                rows="3"
-                placeholder="Description de la tâche"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Date limite</label>
-                <input
-                  type="date"
-                  required
-                  value={taskData.dueDate}
-                  onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
-                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-                />
+            {duplicateError && (
+              <div className="p-4 rounded-lg bg-red-100 text-red-800 font-medium border border-red-200">
+                {duplicateError}
               </div>
+            )}
 
+            <div className="space-y-4">
               <div>
-                <label className={`block text-sm font-medium ${labelClass} mb-2`}>Priorité</label>
-                <select
-                  value={taskData.priority}
-                  onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
-                  className={`w-full px-4 py-2 rounded-lg border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-                >
-                  <option value="low">Basse</option>
-                  <option value="medium">Moyenne</option>
-                  <option value="high">Haute</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium ${labelClass} mb-2`}>Catégorie</label>
-              <div className={`min-h-[45px] flex flex-wrap gap-2 p-2 rounded-lg border ${borderClass} focus-within:ring-2 focus-within:ring-indigo-500 ${inputBgClass} ${inputTextClass}`}>
-                {taskData.category.map((cat, index) => (
-                  <span
-                    key={index}
-                    className={`bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm ${isDarkMode ? 'bg-opacity-80' : ''}`}
-                  >
-                    {cat}
-                    <button
-                      onClick={() => removeCategory(cat)}
-                      className="hover:bg-indigo-200 rounded-full w-4 h-4 flex items-center justify-center transition-colors"
-                      type="button"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
+                <label htmlFor="task-title" className={`block text-sm font-medium ${labelClass} mb-2`}>
+                  Titre de la tâche
+                </label>
                 <input
+                  id="task-title"
                   type="text"
-                  value={categoryInput}
-                  onChange={handleCategoryChange}
-                  className={`flex-grow min-w-[120px] outline-none ${inputBgClass} ${inputTextClass}`}
-                  placeholder="Tapez et utilisez une virgule pour ajouter"
+                  required
+                  value={taskData.title}
+                  onChange={(e) => {
+                    setTaskData({ ...taskData, title: e.target.value });
+                    setDuplicateError('');
+                  }}
+                  className={`w-full px-4 py-3 rounded-xl border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200`}
+                  placeholder="Entrez le titre de la tâche"
                 />
+              </div>
+
+              <div>
+                <label htmlFor="task-description" className={`block text-sm font-medium ${labelClass} mb-2`}>
+                  Description
+                </label>
+                <textarea
+                  id="task-description"
+                  value={taskData.description}
+                  onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
+                  className={`w-full px-4 py-3 rounded-xl border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200`}
+                  rows="3"
+                  placeholder="Décrivez votre tâche"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="task-due-date" className={`block text-sm font-medium ${labelClass} mb-2`}>
+                    Date limite
+                  </label>
+                  <input
+                    id="task-due-date"
+                    type="date"
+                    required
+                    value={taskData.dueDate}
+                    onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
+                    className={`w-full px-4 py-3 rounded-xl border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200`}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="task-priority" className={`block text-sm font-medium ${labelClass} mb-2`}>
+                    Priorité
+                  </label>
+                  <select
+                    id="task-priority"
+                    value={taskData.priority}
+                    onChange={(e) => setTaskData({ ...taskData, priority: e.target.value })}
+                    className={`w-full px-4 py-3 rounded-xl border ${borderClass} ${inputBgClass} ${inputTextClass} focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200`}
+                  >
+                    <option value="low">Basse</option>
+                    <option value="medium">Moyenne</option>
+                    <option value="high">Haute</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="relative">
+                <label htmlFor="task-category" className={`block text-sm font-medium ${labelClass} mb-2`}>
+                  Catégories
+                </label>
+                <div className={`min-h-[45px] flex flex-wrap gap-2 p-3 rounded-xl border ${borderClass} focus-within:ring-2 focus-within:ring-indigo-500 ${inputBgClass} ${inputTextClass} transition-colors duration-200`}>
+                  {taskData.category.map((cat, index) => (
+                    <span
+                      key={index}
+                      className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-3 py-1.5 rounded-full flex items-center gap-2 text-sm font-medium"
+                    >
+                      {cat}
+                      <button
+                        onClick={() => removeCategory(cat)}
+                        className="hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-full w-5 h-5 flex items-center justify-center transition-colors"
+                        type="button"
+                        aria-label={`Supprimer la catégorie ${cat}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <input
+                    id="task-category"
+                    type="text"
+                    value={categoryInput}
+                    onChange={handleCategoryChange}
+                    className={`flex-grow min-w-[120px] outline-none bg-transparent ${inputTextClass}`}
+                    placeholder="Ajouter une catégorie..."
+                    onFocus={() => setCategoryDropdownOpen(true)}
+                    onBlur={() => setTimeout(() => setCategoryDropdownOpen(false), 200)}
+                  />
+                </div>
+                {categoryDropdownOpen && filteredCategories.length > 0 && (
+                  <div className={`absolute z-10 w-full mt-2 ${modalBgClass} border ${borderClass} rounded-xl shadow-lg overflow-hidden max-h-40 overflow-y-auto`}>
+                    {filteredCategories.map((cat, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handleAddCategory(cat)}
+                        className={`w-full text-left px-4 py-3 ${inputTextClass} ${hoverClass} transition-colors duration-200 ${
+                          index !== filteredCategories.length - 1 ? `border-b ${borderClass}` : ''
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-300"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-4 rounded-xl font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
             >
               Créer la tâche
             </button>
@@ -168,13 +262,11 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
 
 
 
-
-
 export const ProfileModal = ({ isOpen, onClose, onSubmit, isDarkMode }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
-  
+
   const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
   const inputBgClass = isDarkMode ? 'bg-gray-700' : 'bg-white';
   const inputTextClass = isDarkMode ? 'text-white' : 'text-gray-900';
@@ -321,7 +413,7 @@ export const NotificationSettings = ({ isOpen, onClose, isDarkMode }) => {
   const user = useSelector((state) => state.user.value);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const modalBgClass = isDarkMode ? 'bg-gray-800' : 'bg-white';
   const textClass = isDarkMode ? 'text-white' : 'text-gray-900';
   const labelClass = isDarkMode ? 'text-gray-200' : 'text-gray-700';
