@@ -87,7 +87,7 @@ const StatsCards = ({ tasks = [] }) => {
                 <CardContent>
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500 mb-1">Tâches terminées</p>
+                            <p className="text-sm text-gray-900 mb-1">Tâches terminées</p>
                             <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
                                 {stats.completed.count}
                             </div>
@@ -118,7 +118,7 @@ const StatsCards = ({ tasks = [] }) => {
                 <CardContent>
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-500 mb-1">Tâches en retard</p>
+                            <p className="text-sm text-gray-900 mb-1">Tâches en retard</p>
                             <div className="text-3xl font-bold bg-gradient-to-r from-red-500 to-rose-500 bg-clip-text text-transparent">
                                 {stats.overdue.count}
                             </div>
