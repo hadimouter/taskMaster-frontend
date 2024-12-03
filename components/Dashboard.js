@@ -15,6 +15,7 @@ import { UpdateProfil } from '../reducers/user.js';
 
 
 const Dashboard = () => {
+    
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
@@ -268,6 +269,8 @@ const Dashboard = () => {
                 isOpen={isTaskModalOpen}
                 onClose={() => setIsTaskModalOpen(false)}
                 onSubmit={handleTaskSubmit}
+                existingTasks={tasks}
+               
             />
             <ProfileModal
                 isDarkMode={isDarkMode}
